@@ -35,6 +35,6 @@ resource "azapi_resource" "this" {
 
   lifecycle {
     # principalType is server-resolved (User/ServicePrincipal/Group) when not specified; ignore to avoid drift.
-    ignore_changes = [body.properties.principalType]
+    ignore_changes = [body.properties.principalType, name]
   }
 }
