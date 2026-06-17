@@ -94,23 +94,23 @@ EOT
     error_message = "blob_properties.restore_policy.days must be between 1 and 365."
   }
   validation {
-    condition = (
+    condition = try(
       var.blob_properties == null ||
       var.blob_properties.restore_policy == null ||
-      try(var.blob_properties.restore_policy.days, null) == null ||
+      var.blob_properties.restore_policy.days == null ||
       var.blob_properties.delete_retention_policy == null ||
-      try(var.blob_properties.delete_retention_policy.days, null) == null ||
-      try(var.blob_properties.restore_policy.days, null) < try(var.blob_properties.delete_retention_policy.days, null)
-    )
+      var.blob_properties.delete_retention_policy.days == null ||
+      var.blob_properties.restore_policy.days < var.blob_properties.delete_retention_policy.days
+    , true)
     error_message = "blob_properties.restore_policy.days must be less than blob_properties.delete_retention_policy.days."
   }
   validation {
-    condition = (
+    condition = try(
       var.blob_properties == null ||
       var.blob_properties.last_access_time_tracking_policy == null ||
-      try(var.blob_properties.last_access_time_tracking_policy.name, null) == null ||
-      contains(["AccessTimeTracking"], try(var.blob_properties.last_access_time_tracking_policy.name, null))
-    )
+      var.blob_properties.last_access_time_tracking_policy.name == null ||
+      contains(["AccessTimeTracking"], var.blob_properties.last_access_time_tracking_policy.name)
+    , true)
     error_message = "blob_properties.last_access_time_tracking_policy.name must be \"AccessTimeTracking\"."
   }
 }
