@@ -70,26 +70,26 @@ Blob service-level settings for the storage account. Defaults to `null` (Azure p
 EOT
 
   validation {
-    condition = var.blob_properties == null || var.blob_properties.change_feed == null || var.blob_properties.change_feed.retention_in_days == null || (
-      var.blob_properties.change_feed.retention_in_days >= 1 && var.blob_properties.change_feed.retention_in_days <= 146000
+    condition = var.blob_properties == null || try(var.blob_properties.change_feed, null) == null || try(var.blob_properties.change_feed.retention_in_days, null) == null || (
+      try(var.blob_properties.change_feed.retention_in_days, null) >= 1 && try(var.blob_properties.change_feed.retention_in_days, null) <= 146000
     )
     error_message = "blob_properties.change_feed.retention_in_days must be between 1 and 146000."
   }
   validation {
-    condition = var.blob_properties == null || var.blob_properties.delete_retention_policy == null || var.blob_properties.delete_retention_policy.days == null || (
-      var.blob_properties.delete_retention_policy.days >= 1 && var.blob_properties.delete_retention_policy.days <= 365
+    condition = var.blob_properties == null || var.blob_properties.delete_retention_policy == null || try(var.blob_properties.delete_retention_policy.days, null) == null || (
+      try(var.blob_properties.delete_retention_policy.days, null) >= 1 && try(var.blob_properties.delete_retention_policy.days, null) <= 365
     )
     error_message = "blob_properties.delete_retention_policy.days must be between 1 and 365."
   }
   validation {
-    condition = var.blob_properties == null || var.blob_properties.container_delete_retention_policy == null || var.blob_properties.container_delete_retention_policy.days == null || (
-      var.blob_properties.container_delete_retention_policy.days >= 1 && var.blob_properties.container_delete_retention_policy.days <= 365
+    condition = var.blob_properties == null || var.blob_properties.container_delete_retention_policy == null || try(var.blob_properties.container_delete_retention_policy.days, null) == null || (
+      try(var.blob_properties.container_delete_retention_policy.days, null) >= 1 && try(var.blob_properties.container_delete_retention_policy.days, null) <= 365
     )
     error_message = "blob_properties.container_delete_retention_policy.days must be between 1 and 365."
   }
   validation {
-    condition = var.blob_properties == null || var.blob_properties.restore_policy == null || var.blob_properties.restore_policy.days == null || (
-      var.blob_properties.restore_policy.days >= 1 && var.blob_properties.restore_policy.days <= 365
+    condition = var.blob_properties == null || var.blob_properties.restore_policy == null || try(var.blob_properties.restore_policy.days, null) == null || (
+      try(var.blob_properties.restore_policy.days, null) >= 1 && try(var.blob_properties.restore_policy.days, null) <= 365
     )
     error_message = "blob_properties.restore_policy.days must be between 1 and 365."
   }
@@ -97,10 +97,10 @@ EOT
     condition = (
       var.blob_properties == null ||
       var.blob_properties.restore_policy == null ||
-      var.blob_properties.restore_policy.days == null ||
+      try(var.blob_properties.restore_policy.days, null) == null ||
       var.blob_properties.delete_retention_policy == null ||
-      var.blob_properties.delete_retention_policy.days == null ||
-      var.blob_properties.restore_policy.days < var.blob_properties.delete_retention_policy.days
+      try(var.blob_properties.delete_retention_policy.days, null) == null ||
+      try(var.blob_properties.restore_policy.days, null) < try(var.blob_properties.delete_retention_policy.days, null)
     )
     error_message = "blob_properties.restore_policy.days must be less than blob_properties.delete_retention_policy.days."
   }
@@ -108,8 +108,8 @@ EOT
     condition = (
       var.blob_properties == null ||
       var.blob_properties.last_access_time_tracking_policy == null ||
-      var.blob_properties.last_access_time_tracking_policy.name == null ||
-      contains(["AccessTimeTracking"], var.blob_properties.last_access_time_tracking_policy.name)
+      try(var.blob_properties.last_access_time_tracking_policy.name, null) == null ||
+      contains(["AccessTimeTracking"], try(var.blob_properties.last_access_time_tracking_policy.name, null))
     )
     error_message = "blob_properties.last_access_time_tracking_policy.name must be \"AccessTimeTracking\"."
   }
