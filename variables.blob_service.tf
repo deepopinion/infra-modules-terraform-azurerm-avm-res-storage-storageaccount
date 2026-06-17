@@ -70,27 +70,27 @@ Blob service-level settings for the storage account. Defaults to `null` (Azure p
 EOT
 
   validation {
-    condition = var.blob_properties == null || try(var.blob_properties.change_feed, null) == null || try(var.blob_properties.change_feed.retention_in_days, null) == null || (
-      try(var.blob_properties.change_feed.retention_in_days, null) >= 1 && try(var.blob_properties.change_feed.retention_in_days, null) <= 146000
-    )
+    condition = try(var.blob_properties == null || var.blob_properties.change_feed == null || var.blob_properties.change_feed.retention_in_days == null || (
+      var.blob_properties.change_feed.retention_in_days >= 1 && var.blob_properties.change_feed.retention_in_days <= 146000
+    ), true)
     error_message = "blob_properties.change_feed.retention_in_days must be between 1 and 146000."
   }
   validation {
-    condition = var.blob_properties == null || var.blob_properties.delete_retention_policy == null || try(var.blob_properties.delete_retention_policy.days, null) == null || (
-      try(var.blob_properties.delete_retention_policy.days, null) >= 1 && try(var.blob_properties.delete_retention_policy.days, null) <= 365
-    )
+    condition = try(var.blob_properties == null || var.blob_properties.delete_retention_policy == null || var.blob_properties.delete_retention_policy.days == null || (
+      var.blob_properties.delete_retention_policy.days >= 1 && var.blob_properties.delete_retention_policy.days <= 365
+    ), true)
     error_message = "blob_properties.delete_retention_policy.days must be between 1 and 365."
   }
   validation {
-    condition = var.blob_properties == null || var.blob_properties.container_delete_retention_policy == null || try(var.blob_properties.container_delete_retention_policy.days, null) == null || (
-      try(var.blob_properties.container_delete_retention_policy.days, null) >= 1 && try(var.blob_properties.container_delete_retention_policy.days, null) <= 365
-    )
+    condition = try(var.blob_properties == null || var.blob_properties.container_delete_retention_policy == null || var.blob_properties.container_delete_retention_policy.days == null || (
+      var.blob_properties.container_delete_retention_policy.days >= 1 && var.blob_properties.container_delete_retention_policy.days <= 365
+    ), true)
     error_message = "blob_properties.container_delete_retention_policy.days must be between 1 and 365."
   }
   validation {
-    condition = var.blob_properties == null || var.blob_properties.restore_policy == null || try(var.blob_properties.restore_policy.days, null) == null || (
-      try(var.blob_properties.restore_policy.days, null) >= 1 && try(var.blob_properties.restore_policy.days, null) <= 365
-    )
+    condition = try(var.blob_properties == null || var.blob_properties.restore_policy == null || var.blob_properties.restore_policy.days == null || (
+      var.blob_properties.restore_policy.days >= 1 && var.blob_properties.restore_policy.days <= 365
+    ), true)
     error_message = "blob_properties.restore_policy.days must be between 1 and 365."
   }
   validation {
